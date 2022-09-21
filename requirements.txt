@@ -1,0 +1,4 @@
+requests
+inquirer
+Pillow
+yaspin
