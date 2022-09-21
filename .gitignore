@@ -1,0 +1,6 @@
+.replit
+.breakpoints
+*.png
+*.jpg
+replit.nix
+/venv/
