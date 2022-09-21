@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script defer src="/_vercel/insights/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="This generator allows you to instantly create posters for any music album for absolutely free!">
+        <title>Album Poster Generator</title>
+    </head>
+    <body>
+        <header class="flex-middle margin-big">
+            <h1 class="title-text">Album Poster Generator</h1>
+        </header>
+        <main class="flex-middle column">
+            <p style="text-align: center">To start generating a poster, type in the name of the Album below</p>
+            <div class="column">
+                <input type="text" id="albumName" name="albumName" placeholder="Album Name" style="margin-bottom: 8px;">
+                <button onclick="search()">Search</button>
+            </div>
+            <div id="search-results">
+                <p>Search Results</p>
+                <div id="search-results-list"></div>
+            </div>
+        </main>
+        <footer class="footer">
+            <iframe src="https://ghbtns.com/github-btn.html?user=Swiftzerr&repo=AlbumPosterGenerator&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+        </footer>
+        <script>
+            let albumName = document.getElementById("albumName");
+            let results = document.getElementById("search-results-list");
+            albumName.addEventListener("keyup", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    search();
+                }
+            });
+
+            // function goToPoster() {
+            //     let collectionId = document.getElementById("albumName").value;
+            //     window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+            // }
+
+            function populateData(data) {
+                let i = 0;
+                let loop = setInterval(() => {
+                    let album = data.results[i];
+                    let albumName = album.collectionName;
+                    let artistName = album.artistName;
+                    let artworkUrl = album.artworkUrl100;
+                    let collectionId = album.collectionId;
+                    let albumDiv = document.createElement("div");
+                    albumDiv.classList.add("album");
+                    albumDiv.innerHTML = "<img src='" + artworkUrl + "'><p>" + albumName + "</p><p>" + artistName + "</p>";
+                    albumDiv.style.opacity = "0";
+                    albumDiv.onclick = function() {
+                        window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+                    }
+                    results.appendChild(albumDiv);
+
+                    setTimeout(() => {
+                        albumDiv.style.opacity = "1";
+                    }, 50);
+
+                    i++;
+                    if (i >= data.results.length) {
+                        clearInterval(loop);
+                    }
+                }, 80);
+            }
+
+            function search() {
+                let term = document.getElementById("albumName").value;
+                let url = "https://itunes.apple.com/search?term=" + term + "&entity=album&limit=50";
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        if (results.innerHTML != "") {
+                            for (let i = 0; i < results.children.length; i++) {
+                                results.children[i].style.opacity = "0";
+                            }
+                            setTimeout(() => {
+                                results.innerHTML = "";
+                                populateData(data);
+                            }, 230);
+                        } else {
+                            populateData(data);
+                        }
+                    });
+            }
+        </script>
+    </body>
+</html>
