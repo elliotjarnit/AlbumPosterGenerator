@@ -16,9 +16,18 @@ from PIL import Image, ImageDraw, ImageFont
 import urllib.request
 from yaspin import yaspin
 import warnings
+import os
+import sys
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def clearConsole():
     print('\n' * 100)
@@ -162,20 +171,20 @@ posterdraw.rectangle([60, 740, 660, 745], fill=(0, 0, 0))
 length = 1000
 cursize = 55
 while length > 480:
-    font_name = ImageFont.truetype('fonts/album_name.ttf', cursize)
-    font_year = ImageFont.truetype('fonts/album_year.ttf', int(cursize / 2) + 5)
+    font_name = ImageFont.truetype(resource_path('fonts/album_name.ttf'), cursize)
+    font_year = ImageFont.truetype(resource_path('fonts/album_year.ttf'), int(cursize / 2) + 5)
     length = font_name.getlength(album_name) + font_year.getlength(
         album_year) + 77
     cursize -= 1
 # Load static fonts
-font_artist = ImageFont.truetype('fonts/album_name.ttf', 25)
-font_tracks = ImageFont.truetype('fonts/album_tracks.ttf', 15)
-font_times = ImageFont.truetype('fonts/album_tracks.ttf', 15)
-font_copyright = ImageFont.truetype('fonts/album_tracks.ttf', 10)
+font_artist = ImageFont.truetype(resource_path('fonts/album_name.ttf'), 25)
+font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 15)
+font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 15)
+font_copyright = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 10)
 # Check if font needed to be smaller
 if smallerfont:
-    font_tracks = ImageFont.truetype('fonts/album_tracks.ttf', 14)
-    font_times = ImageFont.truetype('fonts/album_tracks.ttf', 14)
+    font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 14)
+    font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 14)
 # Put album name on image
 posterdraw.text((65, 725),
                 album_name,
@@ -250,6 +259,8 @@ posterdraw.text((720 / 2, 960),
                 font=font_copyright,
                 fill=(0, 0, 0),
                 anchor='md')
+# Delete album artwork
+os.remove('albumartwork.jpg')
 # Save the image
 poster.save(album_name.replace(" ", "") + ".png")
 # Stop the spinner
