@@ -61,9 +61,10 @@ def format_time(millis):
     return minutes + ":" + seconds
 
 
+clearConsole()
 print("Album poster creator by Elliot Jarnit")
 print("Version " + version)
-search = input("Enter the album name\n> ")
+search = input("\nEnter the album name\n> ")
 
 # Search for albums
 url = 'https://itunes.apple.com/search?term=' + urllib.parse.quote(
