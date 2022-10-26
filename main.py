@@ -5,8 +5,6 @@ version = "1.0.0"
 
 # TODO
 # - Make long album names print on 2 lines
-# - Copyright info on bottom
-# - Tracklist with track length
 
 import urllib.parse
 import requests
@@ -34,14 +32,24 @@ def clearConsole():
 
 
 def get_colors(img):
-    paletted = img.convert('P', palette=Image.ADAPTIVE, colors=5)
-    palette = paletted.getpalette()
-    color_counts = sorted(paletted.getcolors(), reverse=True)
-    colors = list()
-    for i in range(5):
-        palette_index = color_counts[i][1]
-        dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
-        colors.append(tuple(dominant_color))
+    try:
+        paletted = img.convert('P', palette=Image.ADAPTIVE, colors=5)
+        palette = paletted.getpalette()
+        color_counts = sorted(paletted.getcolors(), reverse=True)
+        colors = list()
+        for i in range(5):
+            palette_index = color_counts[i][1]
+            dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
+            colors.append(tuple(dominant_color))
+    except:
+        paletted = img.convert('P', palette=Image.ADAPTIVE, colors=1)
+        palette = paletted.getpalette()
+        color_counts = sorted(paletted.getcolors(), reverse=True)
+        colors = list()
+        for i in range(1):
+            palette_index = color_counts[i][1]
+            dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
+            colors.append(tuple(dominant_color))
     return colors
 
 
@@ -59,6 +67,29 @@ def format_time(millis):
         seconds = "0" + seconds
 
     return minutes + ":" + seconds
+
+def create_track_list(linesoftracks, response):
+    # Get the track list and track times
+    # This will create a list with 5 tracks, then those 5 tracks times (in order) and so on.
+    # Someone else try to find a better way to do this because this was all I could think of
+    tracklist = []
+    cur = 1
+    savedup = []
+    for i in response["results"]:
+        if (i["wrapperType"] == "track"):
+            if cur > linesoftracks:
+                cur = 1
+                for x in savedup:
+                    tracklist.append(x)
+                savedup = []
+            tracklist.append(remove_featured(i["trackName"]))
+            savedup.append(format_time(i["trackTimeMillis"]))
+            cur += 1
+    if len(savedup) > 0:
+        tracklist.append("-")
+        for x in savedup:
+            tracklist.append(x)
+    return tracklist
 
 
 clearConsole()
@@ -84,11 +115,6 @@ for i in res_json['results']:
 # Ask user to select album
 questions = [
     inquirer.List('album', message="Choose an album", choices=choices),
-    inquirer.List(
-        'smallfont',
-        message=
-        "Do you want to use a smaller font for the track list? (select yes if songs go off screen)",
-        choices=["No", "Yes"])
 ]
 prompt_answer = inquirer.prompt(questions)
 clearConsole()
@@ -96,39 +122,11 @@ clearConsole()
 # Get the specific album
 album = res_json['results'][choices.index(prompt_answer['album'])]
 
-# Get the track list and track times
-# This will create a list with 5 tracks, then those 5 tracks times (in order) and so on.
-# Someone else try to find a better way to do this because this was all I could think of
+
 url = 'https://itunes.apple.com/lookup?id=' + str(
-    album['collectionId']) + '&entity=song'
+album['collectionId']) + '&entity=song'
 response = requests.get(url)
 response = json.loads(response.text)
-tracklist = []
-cur = 1
-savedup = []
-linesoftracks = 5
-if prompt_answer["smallfont"] == "Yes":
-    smallerfont = True
-else:
-    smallerfont = False
-if album["trackCount"] > 15:
-    linesoftracks = 6
-if album["trackCount"] > 20:
-    linesoftracks = 7
-for i in response["results"]:
-    if (i["wrapperType"] == "track"):
-        if cur > linesoftracks:
-            cur = 1
-            for x in savedup:
-                tracklist.append(x)
-            savedup = []
-        tracklist.append(remove_featured(i["trackName"]))
-        savedup.append(format_time(i["trackTimeMillis"]))
-        cur += 1
-if len(savedup) > 0:
-    tracklist.append("-")
-    for x in savedup:
-        tracklist.append(x)
 
 # Get important details
 album_artwork_link = album['artworkUrl100'].replace('100x100bb.jpg',
@@ -179,13 +177,52 @@ while length > 480:
     cursize -= 1
 # Load static fonts
 font_artist = ImageFont.truetype(resource_path('fonts/album_name.ttf'), 25)
-font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 15)
-font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 15)
 font_copyright = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 10)
-# Check if font needed to be smaller
-if smallerfont:
-    font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 14)
-    font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 14)
+
+# Get first tracklist
+linesoftracks = 5
+tracklist = create_track_list(linesoftracks, response)
+
+# Extremely compilcated font size calculation
+# This is to make sure the tracklist fits on the poster with the biggest font size possible
+# If you want to try and figure out how this works, good luck
+bestsize = 0
+besttracks = []
+bestlinesoftracks = 0
+
+while True:
+    length = 1000
+    cursize = 17
+    while length > 600:
+        cursize -= 1
+        font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), cursize)
+        font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), cursize)
+        length = 0
+        max = 0
+        for j in range(0, len(tracklist) - 1, linesoftracks * 2):
+            for i in range(j, j + linesoftracks):
+                try:
+                    if max < font_tracks.getlength(tracklist[i]):
+                        max = font_tracks.getlength(tracklist[i])
+                except:
+                    break
+            length += max + font_times.getlength("00:00") + 30
+    if cursize > bestsize:
+        bestsize = cursize
+        besttracks = tracklist
+        bestlinesoftracks = linesoftracks
+    linesoftracks += 1
+    tracklist = create_track_list(linesoftracks, response)
+    if linesoftracks > 9:
+        break
+
+# Load best font
+font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), bestsize)
+font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), bestsize)
+tracklist = besttracks
+linesoftracks = bestlinesoftracks
+
+
 # Put album name on image
 posterdraw.text((65, 725),
                 album_name,
@@ -222,14 +259,13 @@ curx = 775
 cury = 60
 maxlen = 0
 track = True
+
 for cur in tracklist:
     if curline > linesoftracks or cur == "-":
         if track:
             cury += maxlen + 46
         else:
             cury += maxlen + 15
-        if smallerfont:
-            cury -= 5
         curx = 775
         curline = 1
         maxlen = 0
@@ -251,9 +287,7 @@ for cur in tracklist:
                         fill=(0, 0, 0),
                         anchor='rs')
     curline += 1
-    curx += 30
-    if smallerfont:
-        curx -= 10
+    curx += (int(cursize / 2) + 5) * 2
 # Add copyright info in corner
 posterdraw.text((720 / 2, 960),
                 album_copyright,
@@ -266,3 +300,4 @@ os.remove('albumartwork.jpg')
 poster.save(album_name.replace(" ", "") + ".png")
 # Stop the spinner
 spinner.ok("✅ ")
+print("font-size is " + str(bestsize))
