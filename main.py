@@ -17,6 +17,29 @@ import warnings
 import os
 import sys
 
+# Options
+
+# Font Choices
+# - Thin
+# - VeryLight
+# - Light
+# - Regular
+# - Medium
+# - SemiBold
+# - Bold
+# - VeryBold
+
+fonts = {
+    "albumname": "VeryBold",
+    "albumartist": "SemiBold",
+    "tracklist": "Regular",
+    "albumyear": "Medium",
+    "copyright": "Light"
+}
+
+
+# End options
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def resource_path(relative_path):
@@ -91,7 +114,6 @@ def create_track_list(linesoftracks, response):
             tracklist.append(x)
     return tracklist
 
-
 clearConsole()
 print("Album poster creator by Elliot Jarnit")
 print("Version " + version)
@@ -152,6 +174,10 @@ if len(album_name) > 30:
         album_name = input("Album name to put on poster\n> ")
         clearConsole()
 
+if len(sys.argv) > 0:
+    if ("--nocopyright" in sys.argv):
+        album_copyright = ""
+
 # Start the loading spinner
 spinner = yaspin(text="Generating Poster")
 spinner.start()
@@ -170,14 +196,14 @@ posterdraw.rectangle([60, 740, 660, 745], fill=(0, 0, 0))
 length = 1000
 cursize = 55
 while length > 480:
-    font_name = ImageFont.truetype(resource_path('fonts/album_name.ttf'), cursize)
-    font_year = ImageFont.truetype(resource_path('fonts/album_year.ttf'), int(cursize / 2) + 5)
+    font_name = ImageFont.truetype(resource_path('fonts/' + fonts["albumname"].lower() + '.otf'), cursize)
+    font_year = ImageFont.truetype(resource_path('fonts/' + fonts["albumyear"].lower() + '.otf'), int(cursize / 2) + 5)
     length = font_name.getlength(album_name) + font_year.getlength(
         album_year) + 77
     cursize -= 1
 # Load static fonts
-font_artist = ImageFont.truetype(resource_path('fonts/album_name.ttf'), 25)
-font_copyright = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), 10)
+font_artist = ImageFont.truetype(resource_path('fonts/' + fonts["albumartist"].lower() + '.otf'), 25)
+font_copyright = ImageFont.truetype(resource_path('fonts/' + fonts["copyright"].lower() + '.otf'), 10)
 
 # Get first tracklist
 linesoftracks = 5
@@ -195,8 +221,8 @@ while True:
     cursize = 17
     while length > 600:
         cursize -= 1
-        font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), cursize)
-        font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), cursize)
+        font_tracks = ImageFont.truetype(resource_path('fonts/' + fonts["tracklist"].lower() + '.otf'), cursize)
+        font_times = ImageFont.truetype(resource_path('fonts/' + fonts["tracklist"].lower() + '.otf'), cursize)
         length = 0
         max = 0
         for j in range(0, len(tracklist) - 1, linesoftracks * 2):
@@ -217,8 +243,8 @@ while True:
         break
 
 # Load best font
-font_tracks = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), bestsize)
-font_times = ImageFont.truetype(resource_path('fonts/album_tracks.ttf'), bestsize)
+font_tracks = ImageFont.truetype(resource_path('fonts/' + fonts["tracklist"].lower() + '.otf'), bestsize)
+font_times = ImageFont.truetype(resource_path('fonts/' + fonts["tracklist"].lower() + '.otf'), bestsize)
 tracklist = besttracks
 linesoftracks = bestlinesoftracks
 
