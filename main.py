@@ -37,7 +37,7 @@ fonts = {
     "copyright": "Light"
 }
 
-infinitemode = True
+infinitemode = False
 
 
 # End options
@@ -117,6 +117,7 @@ def create_track_list(linesoftracks, response):
     return tracklist
 
 def main():
+    print("\n")
     print("Album poster creator by Elliot Jarnit")
     print("Version " + version)
     search = input("\nEnter the album name\n> ")
