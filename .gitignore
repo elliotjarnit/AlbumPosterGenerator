@@ -2,6 +2,7 @@
 .breakpoints
 *.png
 *.jpg
+.DS_STORE
 replit.nix
 /venv/
 apte_settings.json
