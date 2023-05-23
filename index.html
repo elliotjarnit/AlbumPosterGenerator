@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <title>Album Poster Generator</title>
+    </head>
+    <body>
+        <header class="flex-middle margin-big">
+            <h1 class="title-text">Album Poster Generator</h1>
+        </header>
+        <main class="flex-middle column">
+            <p>To start generating a poster, type in the name of the Album below</p>
+            <div class="column">
+                <input type="text" id="albumName" name="albumName" placeholder="Album Name">
+                <button onclick="goToPoster()">Generate Poster</button>
+            </div>
+        </main>
+        <script>
+            function goToPoster() {
+                let collectionId = document.getElementById("albumName").value;
+                window.location.href = "/poster?id=" + collectionId;
+            }
+        </script>
+    </body>
+</html>
