@@ -23,6 +23,14 @@
             </div>
         </main>
         <script>
+            let albumName = document.getElementById("albumName");
+            albumName.addEventListener("keyup", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    search();
+                }
+            });
+
             // function goToPoster() {
             //     let collectionId = document.getElementById("albumName").value;
             //     window.location.href = "/poster.html?id=" + collectionId + "&type=album";
