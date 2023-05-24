@@ -112,7 +112,7 @@
             return tracklist
 
         def generatePoster(collectionId):
-            url = 'http://www.whateverorigin.org/get?url=' + urllib.parse.quote('https://itunes.apple.com/lookup?id=' + str(collectionId) + '&entity=song')
+            url = 'https://api.allorigins.win/get?url=' + urllib.parse.quote('https://itunes.apple.com/lookup?id=' + str(collectionId) + '&entity=song')
             response = requests.get(url)
             response = json.loads(response.text)
             album = response["results"][0]
