@@ -114,7 +114,8 @@
         def generatePoster(collectionId):
             url = 'https://api.allorigins.win/get?url=' + urllib.parse.quote('https://itunes.apple.com/lookup?id=' + str(collectionId) + '&entity=song')
             response = requests.get(url)
-            response = json.loads(response.text)
+            response = response.json()
+            response = json.loads(response['contents'])
             album = response["results"][0]
 
             # Get important details
