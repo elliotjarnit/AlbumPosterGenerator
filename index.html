@@ -24,6 +24,7 @@
         </main>
         <script>
             let albumName = document.getElementById("albumName");
+            let results = document.getElementById("search-results-list");
             albumName.addEventListener("keyup", function(event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
@@ -36,39 +37,51 @@
             //     window.location.href = "/poster.html?id=" + collectionId + "&type=album";
             // }
 
+            function populateData(data) {
+                let i = 0;
+                let loop = setInterval(() => {
+                    let album = data.results[i];
+                    let albumName = album.collectionName;
+                    let artistName = album.artistName;
+                    let artworkUrl = album.artworkUrl100;
+                    let collectionId = album.collectionId;
+                    let albumDiv = document.createElement("div");
+                    albumDiv.classList.add("album");
+                    albumDiv.innerHTML = "<img src='" + artworkUrl + "'><p>" + albumName + "</p><p>" + artistName + "</p>";
+                    albumDiv.style.opacity = "0";
+                    albumDiv.onclick = function() {
+                        window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+                    }
+                    results.appendChild(albumDiv);
+
+                    setTimeout(() => {
+                        albumDiv.style.opacity = "1";
+                    }, 50);
+
+                    i++;
+                    if (i >= data.results.length) {
+                        clearInterval(loop);
+                    }
+                }, 80);
+            }
+
             function search() {
                 let term = document.getElementById("albumName").value;
                 let url = "https://itunes.apple.com/search?term=" + term + "&entity=album&limit=50";
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        let results = document.getElementById("search-results-list");
-                        results.innerHTML = "";
-                        let i = 0;
-                        let loop = setInterval(() => {
-                            let album = data.results[i];
-                            let albumName = album.collectionName;
-                            let artistName = album.artistName;
-                            let artworkUrl = album.artworkUrl100;
-                            let collectionId = album.collectionId;
-                            let albumDiv = document.createElement("div");
-                            albumDiv.classList.add("album");
-                            albumDiv.innerHTML = "<img src='" + artworkUrl + "'><p>" + albumName + "</p><p>" + artistName + "</p>";
-                            albumDiv.style.opacity = "0";
-                            albumDiv.onclick = function() {
-                                window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+                        if (results.innerHTML != "") {
+                            for (let i = 0; i < results.children.length; i++) {
+                                results.children[i].style.opacity = "0";
                             }
-                            results.appendChild(albumDiv);
-
                             setTimeout(() => {
-                                albumDiv.style.opacity = "1";
-                            }, 50);
-
-                            i++;
-                            if (i >= data.results.length) {
-                                clearInterval(loop);
-                            }
-                        }, 80);
+                                results.innerHTML = "";
+                                populateData(data);
+                            }, 230);
+                        } else {
+                            populateData(data);
+                        }
                     });
             }
         </script>
