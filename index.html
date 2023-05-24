@@ -14,13 +14,49 @@
             <p>To start generating a poster, type in the name of the Album below</p>
             <div class="column">
                 <input type="text" id="albumName" name="albumName" placeholder="Album Name">
-                <button onclick="goToPoster()">Generate Poster</button>
+                <button onclick="search()">Search</button>
+            </div>
+            <div id="search-results">
+                <p>Search Results</p>
+                <div id="search-results-list">
+                </div>
             </div>
         </main>
         <script>
-            function goToPoster() {
-                let collectionId = document.getElementById("albumName").value;
-                window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+            // function goToPoster() {
+            //     let collectionId = document.getElementById("albumName").value;
+            //     window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+            // }
+
+            function search() {
+                let term = document.getElementById("albumName").value;
+                let url = "https://itunes.apple.com/search?term=" + term + "&entity=album&limit=5";
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        let results = document.getElementById("search-results-list");
+                        results.innerHTML = "";
+                        let i = 0;
+                        let loop = setInterval(() => {
+                            let album = data.results[i];
+                            let albumName = album.collectionName;
+                            let artistName = album.artistName;
+                            let artworkUrl = album.artworkUrl100;
+                            let collectionId = album.collectionId;
+                            let albumDiv = document.createElement("div");
+                            albumDiv.classList.add("album");
+                            albumDiv.innerHTML = "<img src='" + artworkUrl + "'><p>" + albumName + "</p><p>" + artistName + "</p>";
+                            albumDiv.onclick = function() {
+                                window.location.href = "/poster.html?id=" + collectionId + "&type=album";
+                            }
+                            results.appendChild(albumDiv);
+
+                            i++;
+                            if (i >= data.results.length) {
+                                clearInterval(loop);
+                            }
+                        }, 100);
+                    });
             }
         </script>
     </body>

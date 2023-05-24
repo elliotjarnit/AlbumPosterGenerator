@@ -41,3 +41,33 @@ body {
     aspect-ratio: 0.75;
     height: 650px;
 }
+
+#search-results {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+#search-results-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1rem;
+}
+
+.album {
+    width: 200px;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    cursor: pointer;
+}
+
+.album:hover {
+    transform: scale(1.05);
+}
