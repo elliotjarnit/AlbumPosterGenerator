@@ -30,7 +30,7 @@
 
             function search() {
                 let term = document.getElementById("albumName").value;
-                let url = "https://itunes.apple.com/search?term=" + term + "&entity=album&limit=5";
+                let url = "https://itunes.apple.com/search?term=" + term + "&entity=album&limit=50";
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
@@ -46,16 +46,21 @@
                             let albumDiv = document.createElement("div");
                             albumDiv.classList.add("album");
                             albumDiv.innerHTML = "<img src='" + artworkUrl + "'><p>" + albumName + "</p><p>" + artistName + "</p>";
+                            albumDiv.style.opacity = "0";
                             albumDiv.onclick = function() {
                                 window.location.href = "/poster.html?id=" + collectionId + "&type=album";
                             }
                             results.appendChild(albumDiv);
 
+                            setTimeout(() => {
+                                albumDiv.style.opacity = "1";
+                            }, 50);
+
                             i++;
                             if (i >= data.results.length) {
                                 clearInterval(loop);
                             }
-                        }, 100);
+                        }, 80);
                     });
             }
         </script>
