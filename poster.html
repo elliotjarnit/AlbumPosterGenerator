@@ -13,12 +13,16 @@
       <div id="image-display"></div>
     </div>
 
-    <div id="url" style="display: none;"></div>
+    <div id="data" style="display: none;"></div>
     <script>
-        let urlDiv = document.querySelector("#url");
+        let dataDiv = document.querySelector("#data");
         let url = new URL(window.location.href);
         let collectionId = url.searchParams.get("id");
-        urlDiv.innerHTML = collectionId;
+        let data = fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
+            .then(response => response.json())
+            .then(data => {
+                dataDiv.innerHTML = JSON.stringify(data);
+            });
     </script>
   </body>
   <py-config>
@@ -111,12 +115,8 @@
                     tracklist.append(x)
             return tracklist
 
-        def generatePoster(collectionId):
-            url = 'https://api.allorigins.win/get?url=' + urllib.parse.quote('https://itunes.apple.com/lookup?id=' + str(collectionId) + '&entity=song')
-            response = requests.get(url)
-            response = response.json()
-            response = json.loads(response['contents'])
-            album = response["results"][0]
+        def generatePoster(data):
+            album = data["results"][0]
 
             # Get important details
             album_artwork_link = album['artworkUrl100'].replace('100x100bb.jpg',
@@ -156,7 +156,7 @@
 
             # Get first tracklist
             linesoftracks = 5
-            tracklist = create_track_list(linesoftracks, response)
+            tracklist = create_track_list(linesoftracks, data)
 
             # Extremely compilcated font size calculation
             # This is to make sure the tracklist fits on the poster with the biggest font size possible
@@ -187,7 +187,7 @@
                     besttracks = tracklist
                     bestlinesoftracks = linesoftracks
                 linesoftracks += 1
-                tracklist = create_track_list(linesoftracks, response)
+                tracklist = create_track_list(linesoftracks, data)
                 if linesoftracks > 9:
                     break
 
@@ -270,7 +270,8 @@
 
             display(poster, target="image-display")
 
-        urlDiv = Element("url")
-        generatePoster(urlDiv.innerHtml)
+        dataDiv = Element("data")
+        data = json.loads(dataDiv.innerHtml)
+        generatePoster(data)
     </py-script>
 </html>
