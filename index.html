@@ -18,7 +18,6 @@
             </div>
             <div id="search-results">
                 <p>Search Results</p>
-                <div class="lds-ring" id="loading-gif" style="opacity: 0"><div></div><div></div><div></div><div></div></div>
                 <div id="search-results-list"></div>
             </div>
         </main>
@@ -71,14 +70,12 @@
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById("loading-gif").style.opacity = "0";
                         if (results.innerHTML != "") {
                             for (let i = 0; i < results.children.length; i++) {
                                 results.children[i].style.opacity = "0";
                             }
                             setTimeout(() => {
                                 results.innerHTML = "";
-                                document.getElementById("loading-gif").style.opacity = "1";
                                 populateData(data);
                             }, 230);
                         } else {
