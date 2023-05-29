@@ -73,7 +73,7 @@
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        print(data)
+                        console.log(data)
                         if (results.innerHTML != "") {
                             for (let i = 0; i < results.children.length; i++) {
                                 results.children[i].style.opacity = "0";

@@ -22,6 +22,9 @@
                 .then(response => response.json())
                 .then(data => {
                     dataDiv.innerHTML = JSON.stringify(data);
+                })
+                .catch(error => {
+                    console.error(error);
                 });
         </script>
     </body>
