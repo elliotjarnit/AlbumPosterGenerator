@@ -29,17 +29,18 @@
         </script>
     </body>
     <py-config>
-      packages = ["Pillow", "requests", "pyodide-http"]
+        packages = ["Pillow", "requests", "pyodide-http"]
 
-      [[fetch]]
-      files = ["/main.py"]
+        [[fetch]]
+        files = ["/main.py"]
     </py-config>
 
     <py-script>
-      import json
+        import json
+        import main
 
-      dataDiv = Element("data")
-      data = json.loads(dataDiv.innerHtml)
-      generatePoster(data)
+        dataDiv = Element("data")
+        data = json.loads(dataDiv.innerHtml)
+        generatePoster(data)
     </py-script>
 </html>
