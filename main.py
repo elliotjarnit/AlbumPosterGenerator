@@ -5,6 +5,10 @@ import os
 import sys
 from io import BytesIO
 import warnings
+import requests
+import pyodide_http
+
+pyodide_http.patch_all()
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
