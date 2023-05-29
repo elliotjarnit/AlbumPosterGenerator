@@ -123,14 +123,14 @@ def generatePoster(data):
     length = 1000
     cursize = 55
     twolinesforalbum = False
-    while length > 480 or cursize < 25:
+    while length > 480 and cursize >= 25:
         font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
         font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
         length = font_name.getlength(album_name) + font_year.getlength(
             album_year) + 77
         cursize -= 1
 
-    if cursize < 25:
+    if cursize < 25 and length > 480:
         twolinesforalbum = True
         length = 1000
         cursize = 55
@@ -147,7 +147,7 @@ def generatePoster(data):
             albumnametocompare = album_name[1]
 
 
-        while length > 480:
+        while length > 480 or cursize >= 25:
             font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
             font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
 
