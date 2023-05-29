@@ -155,9 +155,6 @@ def generatePoster(data):
                 album_year) + 77
             cursize -= 1
 
-    print(cursize)
-    print(length)
-    print(albumnametocompare)
     # Load static fonts
     font_artist = ImageFont.truetype(BytesIO(fonts["semibold"].content), 25)
     font_copyright = ImageFont.truetype(BytesIO(fonts["light"].content), 10)
