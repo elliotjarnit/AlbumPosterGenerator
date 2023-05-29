@@ -21,6 +21,9 @@
                 <div id="search-results-list"></div>
             </div>
         </main>
+        <footer class="footer">
+            <iframe src="https://ghbtns.com/github-btn.html?user=Swiftzerr&repo=AlbumPosterGenerator&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+        </footer>
         <script>
             let albumName = document.getElementById("albumName");
             let results = document.getElementById("search-results-list");
@@ -70,6 +73,7 @@
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
+                        print(data)
                         if (results.innerHTML != "") {
                             for (let i = 0; i < results.children.length; i++) {
                                 results.children[i].style.opacity = "0";

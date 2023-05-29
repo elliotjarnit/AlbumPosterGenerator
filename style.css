@@ -125,3 +125,13 @@ body {
         transform: rotate(360deg);
     }
 }
+
+.footer {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
