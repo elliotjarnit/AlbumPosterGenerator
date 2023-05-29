@@ -23,6 +23,16 @@ fonts = {
     "verybold": requests.get("https://files.elliotjarnit.dev/fonts/verybold.otf"),
 }
 
+def find_line_split(text):
+    middle = len(text) // 2
+    before = text.rfind(' ', 0, middle)
+    after = text.find(' ', middle + 1)
+    if before == -1 or (after != -1 and middle - before >= after - middle):
+        middle = after
+    else:
+        middle = before
+    return middle
+
 def get_colors(img):
     try:
         paletted = img.convert('P', palette=Image.ADAPTIVE, colors=5)
@@ -112,12 +122,39 @@ def generatePoster(data):
     # Calculate font size for large album names
     length = 1000
     cursize = 55
-    while length > 480:
+    twolinesforalbum = False
+    while length > 480 or cursize < 25:
         font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
         font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
         length = font_name.getlength(album_name) + font_year.getlength(
             album_year) + 77
         cursize -= 1
+
+    if cursize < 25:
+        twolinesforalbum = True
+        length = 1000
+        cursize = 55
+
+        temp = []
+        temp.append(album_name[:find_line_split(album_name)])
+        temp.append(album_name[find_line_split(album_name):])
+        album_name = temp
+
+        albumnametocompare = ""
+        if len(album_name[0]) > len(album_name[1]):
+            albumnametocompare = album_name[0]
+        else:
+            albumnametocompare = album_name[1]
+
+
+        while length > 480:
+            font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
+            font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
+
+            length = font_name.getlength(albumnametocompare) + font_year.getlength(
+                album_year) + 77
+            cursize -= 1
+
     print(cursize)
     # Load static fonts
     font_artist = ImageFont.truetype(BytesIO(fonts["semibold"].content), 25)
