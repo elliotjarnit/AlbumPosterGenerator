@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" href="style.css" type="text/css">
-      <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-      <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-      <script defer src="/_vercel/insights/script.js"></script>
-      <title>Poster</title>
-  </head>
-  <body>
-    <div class="poster-div">
-      <div id="image-display"></div>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <script defer src="/_vercel/insights/script.js"></script>
+        <title>Poster</title>
+    </head>
+    <body>
+        <div class="poster-div">
+            <div id="image-display"></div>
+        </div>
 
-    <div id="data" style="display: none;"></div>
-    <script>
-        let dataDiv = document.querySelector("#data");
-        let url = new URL(window.location.href);
-        let collectionId = url.searchParams.get("id");
-        let data = fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
-            .then(response => response.json())
-            .then(data => {
-                dataDiv.innerHTML = JSON.stringify(data);
-            });
-    </script>
-  </body>
-  <py-config>
+        <div id="data" style="display: none;"></div>
+        <script>
+            let dataDiv = document.querySelector("#data");
+            let url = new URL(window.location.href);
+            let collectionId = url.searchParams.get("id");
+            let data = fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
+                .then(response => response.json())
+                .then(data => {
+                    dataDiv.innerHTML = JSON.stringify(data);
+                });
+        </script>
+    </body>
+    <py-config>
       packages = ["Pillow", "requests", "pyodide-http"]
 
       [[fetch]]
       files = ["/main.py"]
-  </py-config>
+    </py-config>
 
-  <py-script>
+    <py-script>
       import json
 
       dataDiv = Element("data")
       data = json.loads(dataDiv.innerHtml)
       generatePoster(data)
-  </py-script>
+    </py-script>
 </html>
