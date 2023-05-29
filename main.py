@@ -151,11 +151,13 @@ def generatePoster(data):
             font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
             font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
 
+
             length = font_name.getlength(albumnametocompare) + font_year.getlength(
                 album_year) + 77
             cursize -= 1
 
     print(cursize)
+    print(albumnametocompare)
     # Load static fonts
     font_artist = ImageFont.truetype(BytesIO(fonts["semibold"].content), 25)
     font_copyright = ImageFont.truetype(BytesIO(fonts["light"].content), 10)
