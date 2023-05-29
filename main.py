@@ -232,7 +232,5 @@ def generatePoster(data):
         curline += 1
         curx += (int(cursize / 2) + 5) * 2
 
-    element = Element("image-display")
-    element.clear()
 
-    display(poster, target="image-display")
+    return poster

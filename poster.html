@@ -41,6 +41,9 @@
 
         dataDiv = Element("data")
         data = json.loads(dataDiv.innerHtml)
-        main.generatePoster(data)
+        element = Element("image-display")
+        element.clear()
+
+        display(main.generatePoster(data), target="image-display")
     </py-script>
 </html>
