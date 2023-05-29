@@ -118,6 +118,7 @@ def generatePoster(data):
         length = font_name.getlength(album_name) + font_year.getlength(
             album_year) + 77
         cursize -= 1
+    print(cursize)
     # Load static fonts
     font_artist = ImageFont.truetype(BytesIO(fonts["semibold"].content), 25)
     font_copyright = ImageFont.truetype(BytesIO(fonts["light"].content), 10)
@@ -126,7 +127,7 @@ def generatePoster(data):
     linesoftracks = 5
     tracklist = create_track_list(linesoftracks, data)
 
-    # Extremely compilcated font size calculation
+    # Extremely complicated font size calculation
     # This is to make sure the tracklist fits on the poster with the biggest font size possible
     # If you want to try and figure out how this works, good luck
     bestsize = 0
