@@ -228,7 +228,7 @@ def generatePoster(data):
     albumnamebbox = posterdraw.textbbox((20, 20), "a", font=font_name)
     albumyearbbox = posterdraw.textbbox((20, 20), "a", font=font_year)
     # Put the year on image
-    posterdraw.text((77 + font_name.getlength(album_name), 725),
+    posterdraw.text((77 + font_name.getlength(albumnametocompare), 725),
                     album_year,
                     font=font_year,
                     fill=(0, 0, 0),
