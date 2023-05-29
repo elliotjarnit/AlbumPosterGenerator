@@ -147,7 +147,7 @@ def generatePoster(data):
             albumnametocompare = album_name[1]
 
 
-        while length > 480 or cursize >= 25:
+        while length > 480 and cursize >= 25:
             font_name = ImageFont.truetype(BytesIO(fonts["verybold"].content), cursize)
             font_year = ImageFont.truetype(BytesIO(fonts["medium"].content), int(cursize / 2) + 5)
 
@@ -207,11 +207,23 @@ def generatePoster(data):
 
 
     # Put album name on image
-    posterdraw.text((65, 725),
-                    album_name,
-                    font=font_name,
-                    fill=(0, 0, 0),
-                    anchor='ls')
+    if twolinesforalbum:
+        posterdraw.text((65, 725),
+                        album_name[0],
+                        font=font_name,
+                        fill=(0, 0, 0),
+                        anchor='ls')
+        posterdraw.text((65, 725 + font_name.getsize(album_name[0])[1] + 5),
+                        album_name[1],
+                        font=font_name,
+                        fill=(0, 0, 0),
+                        anchor='ls')
+    else:
+        posterdraw.text((65, 725),
+                        album_name,
+                        font=font_name,
+                        fill=(0, 0, 0),
+                        anchor='ls')
     # Calculate where the year goes on image
     albumnamebbox = posterdraw.textbbox((20, 20), "a", font=font_name)
     albumyearbbox = posterdraw.textbbox((20, 20), "a", font=font_year)
