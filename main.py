@@ -136,7 +136,7 @@ def generatePoster(data):
         cursize = 55
 
         temp = []
-        temp.append(album_name[:find_line_split(album_name)].strip()
+        temp.append(album_name[:find_line_split(album_name)].strip())
         temp.append(album_name[find_line_split(album_name):].strip())
         album_name = temp
 
