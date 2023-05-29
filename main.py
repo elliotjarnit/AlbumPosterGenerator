@@ -208,12 +208,12 @@ def generatePoster(data):
 
     # Put album name on image
     if twolinesforalbum:
-        posterdraw.text((65, 725),
+        posterdraw.text((65, 725 - (font_name.getsize(album_name[0])[1]) + 5),
                         album_name[0],
                         font=font_name,
                         fill=(0, 0, 0),
                         anchor='ls')
-        posterdraw.text((65, 725 + font_name.getsize(album_name[0])[1] + 5),
+        posterdraw.text((65, 725),
                         album_name[1],
                         font=font_name,
                         fill=(0, 0, 0),
