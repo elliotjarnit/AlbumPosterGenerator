@@ -38,9 +38,11 @@
     <py-script>
         import json
         import main
+        import urllib.parse
 
         dataDiv = Element("data")
-        data = json.loads(dataDiv.innerHtml)
+        data = urllib.parse.unquote(dataDiv.innerHTML)
+        data = json.loads(data)
         element = Element("image-display")
         element.clear()
 
