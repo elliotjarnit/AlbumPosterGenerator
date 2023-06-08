@@ -41,7 +41,7 @@
         import urllib.parse
 
         dataDiv = Element("data")
-        data = urllib.parse.unquote(dataDiv.innerHTML)
+        data = urllib.parse.unquote(dataDiv.innerHtml)
         data = json.loads(data)
         element = Element("image-display")
         element.clear()
