@@ -94,6 +94,7 @@ def create_track_list(linesoftracks, response):
     return tracklist
 
 def generatePoster(data):
+    data = urllib.parse.unquote(data)
     album = data["results"][0]
 
     # Get important details
