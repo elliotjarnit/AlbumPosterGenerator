@@ -193,7 +193,7 @@ def generatePoster(data):
             bestlinesoftracks = linesoftracks
         linesoftracks += 1
         tracklist = create_track_list(linesoftracks, data)
-        if linesoftracks > 9:
+        if linesoftracks > 7:
             break
 
     # Load best font
