@@ -36,7 +36,6 @@
                         // Convert to blob
                         .then(response => response.blob())
                         .then(data => {
-
                             document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
                         })
                         .catch(error => {
