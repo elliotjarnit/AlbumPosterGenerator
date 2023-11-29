@@ -10,18 +10,38 @@
     </head>
     <body>
         <div class="poster-div">
-            <div id="image-display"></div>
+            <div id="image-display">
+            </div>
         </div>
-
-        <div id="data" style="display: none;"></div>
         <script>
-            let dataDiv = document.querySelector("#data");
             let url = new URL(window.location.href);
             let collectionId = url.searchParams.get("id");
-            let data = fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
+            fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
                 .then(response => response.json())
                 .then(data => {
-                    dataDiv.innerHTML = JSON.stringify(data);
+                    // Fetch image from api
+                    fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: data.results[0].collectionName,
+                            artist: data.results[0].artistName,
+                            year: data.results[0].releaseDate.substring(0, 4),
+                            artwork: data.results[0].artworkUrl100,
+                            tracklist: data.results.slice(1)
+                        })
+                    })
+                        // Convert to blob
+                        .then(response => response.blob())
+                        .then(data => {
+
+                            document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 })
                 .catch(error => {
                     console.error(error);
