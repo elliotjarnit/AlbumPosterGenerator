@@ -28,31 +28,4 @@
                 });
         </script>
     </body>
-    <py-config>
-        packages = ["Pillow", "requests", "pyodide-http"]
-
-        [[fetch]]
-        files = ["/main.py"]
-    </py-config>
-
-    <py-script>
-        import json
-        import main
-        try:
-            from html import unescape  # python 3.4+
-        except ImportError:
-            try:
-                from html.parser import HTMLParser  # python 3.x (<3.4)
-            except ImportError:
-                from HTMLParser import HTMLParser  # python 2.x
-            unescape = HTMLParser().unescape
-
-        dataDiv = Element("data")
-        data = unescape(dataDiv.innerHtml)
-        data = json.loads(data)
-        element = Element("image-display")
-        element.clear()
-
-        display(main.generatePoster(data), target="image-display")
-    </py-script>
 </html>
