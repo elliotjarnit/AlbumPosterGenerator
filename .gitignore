@@ -1,6 +1,5 @@
 .replit
 .breakpoints
-*.png
 *.jpg
 .DS_STORE
 replit.nix
