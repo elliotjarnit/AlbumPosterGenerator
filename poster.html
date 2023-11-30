@@ -169,6 +169,9 @@
                 // Show loader
                 document.getElementById("loader").style.display = "block";
 
+                // Clear image
+                document.getElementById("image-display").innerHTML = "";
+
                 // Fetch image from api
                 fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
                     method: 'POST',
