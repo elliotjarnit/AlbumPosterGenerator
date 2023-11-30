@@ -2,47 +2,189 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="style.css" type="text/css">
         <script defer src="/_vercel/insights/script.js"></script>
         <title>Poster</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .main {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .options-div {
+                float: left;
+                width: 50%;
+                height: 100%;
+                background-color: #f5f5f5;
+            }
+
+            .options-div form {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-right: 50px;
+            }
+
+            .poster-div {
+                float: right;
+                width: 50%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #image-display img {
+                aspect-ratio: 0.75;
+                height: 650px;
+            }
+
+            .lds-ellipsis {
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 80px;
+            }
+
+            .lds-ellipsis div {
+                position: absolute;
+                top: 33px;
+                width: 13px;
+                height: 13px;
+                border-radius: 50%;
+                background: #808080;
+                animation-timing-function: cubic-bezier(0, 1, 1, 0);
+            }
+
+            .lds-ellipsis div:nth-child(1) {
+                left: 8px;
+                animation: lds-ellipsis1 0.6s infinite;
+            }
+
+            .lds-ellipsis div:nth-child(2) {
+                left: 8px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+
+            .lds-ellipsis div:nth-child(3) {
+                left: 32px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+
+            .lds-ellipsis div:nth-child(4) {
+                left: 56px;
+                animation: lds-ellipsis3 0.6s infinite;
+            }
+
+            @keyframes lds-ellipsis1 {
+                0% {
+                    transform: scale(0);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes lds-ellipsis3 {
+                0% {
+                    transform: scale(1);
+                }
+                100% {
+                    transform: scale(0);
+                }
+            }
+
+            @keyframes lds-ellipsis2 {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(24px, 0);
+                }
+            }
+        </style>
     </head>
     <body>
-        <div class="poster-div">
-            <div id="image-display">
+        <div class="main">
+            <div class="options-div">
+                <form>
+                    <label for="album-name">
+                        Album Name
+                    </label>
+                    <input id="album-name" />
+                    <label for="album-year">
+                        Album Year
+                    </label>
+                    <input id="album-year" />
+                    <label for="album-artist">
+                        Album Artist
+                    </label>
+                    <input id="album-artist" />
+                </form>
+            </div>
+            <div class="poster-div">
+                <div id="image-display">
+                </div>
+                <div class="loader">
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                </div>
             </div>
         </div>
         <script>
             let url = new URL(window.location.href);
             let collectionId = url.searchParams.get("id");
+
+            let data = null;
+
             fetch(`https://itunes.apple.com/lookup?id=${collectionId}&entity=song`)
                 .then(response => response.json())
-                .then(data => {
-                    // Fetch image from api
-                    fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            name: data.results[0].collectionName,
-                            artist: data.results[0].artistName,
-                            year: data.results[0].releaseDate.substring(0, 4),
-                            artwork: data.results[0].artworkUrl100,
-                            tracklist: data.results.slice(1)
-                        })
-                    })
-                        // Convert to blob
-                        .then(response => response.blob())
-                        .then(data => {
-                            document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
+                .then(res => {
+                    data = res;
+
+                    // Populate form
+                    document.getElementById("album-name").value = data.results[0].collectionName;
+                    document.getElementById("album-year").value = data.results[0].releaseDate.substring(0, 4);
+                    document.getElementById("album-artist").value = data.results[0].artistName;
+
+                    // Generate poster
+                    generatePoster();
                 })
                 .catch(error => {
                     console.error(error);
                 });
+
+            function generatePoster() {
+                // Fetch image from api
+                fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById("album-name").value,
+                        artist: document.getElementById("album-artist").value,
+                        year: document.getElementById("album-year").value,
+                        artwork: data.results[0].artworkUrl100,
+                        tracklist: data.results.slice(1)
+                    })
+                })
+                    // Convert to blob
+                    .then(response => response.blob())
+                    .then(data => {
+                        document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
         </script>
     </body>
 </html>
