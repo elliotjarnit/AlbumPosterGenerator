@@ -188,7 +188,7 @@
                         year: document.getElementById("album-year").value,
                         artwork: data.results[0].artworkUrl100,
                         tracklist: data.results.slice(1),
-                        copyright: document.getElementById("copyright").value ?
+                        copyright: document.getElementById("copyright").checked ?
                             data.results[0].copyright.replace("℗", "(c)") :
                             ""
                     })
