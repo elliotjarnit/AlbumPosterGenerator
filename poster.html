@@ -128,6 +128,10 @@
                         Album Artist
                     </label>
                     <input id="album-artist" />
+                    <label for="copyright">
+                        Display copyright info?
+                    </label>
+                    <input type="checkbox" id="copyright">
 
                     <button type="button" onclick="generatePoster()">
                         Generate Poster
@@ -183,7 +187,10 @@
                         artist: document.getElementById("album-artist").value,
                         year: document.getElementById("album-year").value,
                         artwork: data.results[0].artworkUrl100,
-                        tracklist: data.results.slice(1)
+                        tracklist: data.results.slice(1),
+                        copyright: document.getElementById("copyright").value ?
+                            data.results[0].copyright.replace("℗", "(c)") :
+                            ""
                     })
                 })
                     // Convert to blob
