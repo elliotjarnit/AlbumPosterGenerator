@@ -133,7 +133,7 @@
             <div class="poster-div">
                 <div id="image-display">
                 </div>
-                <div class="loader">
+                <div id="loader" style="display: none">
                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                 </div>
             </div>
@@ -162,6 +162,9 @@
                 });
 
             function generatePoster() {
+                // Show loader
+                document.getElementById("loader").style.display = "block";
+
                 // Fetch image from api
                 fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
                     method: 'POST',
@@ -180,9 +183,15 @@
                     .then(response => response.blob())
                     .then(data => {
                         document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
+
+                        // Hide loader
+                        document.getElementById("loader").style.display = "none";
                     })
                     .catch(error => {
                         console.error(error);
+
+                        // Hide loader
+                        document.getElementById("loader").style.display = "none";
                     });
             }
         </script>
