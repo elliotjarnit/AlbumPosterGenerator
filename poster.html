@@ -177,6 +177,15 @@
                         Display copyright info?
                     </label>
                     <input type="checkbox" id="copyright">
+                    <label for="tracklist">
+                        Tracklist
+                    </label>
+                    <div id="tracklist">
+                        <div id="tracklist-item">
+                            <input id="tracklist-item-name" />
+                            <input id="tracklist-item-duration" />
+                        </div>
+                    </div>
                 </form>
 
                 <div id="generate-div">
@@ -213,6 +222,20 @@
                     document.getElementById("album-year").value = data.results[0].releaseDate.substring(0, 4);
                     document.getElementById("album-artist").value = data.results[0].artistName;
 
+                    // Populate tracklist
+                    let tracklist = document.getElementById("tracklist");
+                    tracklist.innerHTML = "";
+                    for (let i = 1; i < data.results.length; i++) {
+                        let track = data.results[i];
+                        let tracklistItem = document.createElement("div");
+                        tracklistItem.id = "tracklist-item";
+                        tracklistItem.innerHTML = `
+                            <input id="tracklist-item-name" value="${track.trackName}" />
+                            <input id="tracklist-item-duration" value="${new Date(track.trackTimeMillis).toISOString().substr(14, 5)}" />
+                        `;
+                        tracklist.appendChild(tracklistItem);
+                    }
+
                     // Generate poster
                     generatePoster();
                 })
@@ -238,7 +261,12 @@
                         artist: document.getElementById("album-artist").value,
                         year: document.getElementById("album-year").value,
                         artwork: data.results[0].artworkUrl100,
-                        tracklist: data.results.slice(1),
+                        tracklist: Array.from(document.querySelectorAll("#tracklist-item")).map(item => {
+                            return {
+                                name: item.querySelector("#tracklist-item-name").value,
+                                duration: item.querySelector("#tracklist-item-duration").value
+                            }
+                        }),
                         copyright: document.getElementById("copyright").checked ?
                             data.results[0].copyright.replace("℗", "(c)") :
                             ""
