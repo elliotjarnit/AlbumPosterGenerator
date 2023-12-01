@@ -263,8 +263,8 @@
                         artwork: data.results[0].artworkUrl100,
                         tracklist: Array.from(document.querySelectorAll("#tracklist-item")).map(item => {
                             return {
-                                name: item.querySelector("#tracklist-item-name").value,
-                                duration: item.querySelector("#tracklist-item-duration").value
+                                trackName: item.querySelector("#tracklist-item-name").value,
+                                trackTimeMillis: new Date(`1970-01-01T${item.querySelector("#tracklist-item-duration").value}:00Z`).getTime()
                             }
                         }),
                         copyright: document.getElementById("copyright").checked ?
