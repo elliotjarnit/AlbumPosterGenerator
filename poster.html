@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <script defer src="/_vercel/insights/script.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
         <title>Poster</title>
         <style>
             body {
@@ -206,6 +207,7 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script>
             let url = new URL(window.location.href);
             let collectionId = url.searchParams.get("id");
@@ -246,6 +248,28 @@
             const toMilliseconds = (hrs,min,sec) => (hrs*60*60+min*60+sec)*1000;
 
             function generatePoster() {
+                // Validate tracklist using regex
+                let tracklist = Array.from(document.querySelectorAll("#tracklist-item"));
+                let tracklistValid = true;
+                tracklist.forEach(item => {
+                    let duration = item.querySelector("#tracklist-item-duration").value;
+                    if (!/^\d{2}:\d{2}$/.test(duration)) {
+                        tracklistValid = false;
+                        Toastify({
+                            text: "Tracklist duration must be in the format mm:ss",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "linear-gradient(to right, #ff0000, #ff0000)",
+                            stopOnFocus: true
+                        }).showToast();
+                    }
+                });
+
+                if (!tracklistValid) {
+                    return;
+                }
+
                 // Show loader
                 document.getElementById("loader").style.display = "block";
 
