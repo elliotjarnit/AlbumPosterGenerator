@@ -44,11 +44,35 @@
                 justify-content: center;
                 align-items: center;
                 background-color: rgb(15, 20, 30);
+                overflow-y: scroll;
+            }
+
+            #image-display {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow-y: scroll;
             }
 
             #image-display img {
                 aspect-ratio: 0.75;
                 height: 650px;
+            }
+
+            #image-display button {
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: none;
+                color: rgb(15, 20, 30);
+                background-color: #ffffff;
+                font-size: 20px;
+                cursor: pointer;
+                margin-top: 20px;
+            }
+
+            #image-display button:hover {
+                background-color: rgb(240, 240, 240);
             }
 
             .lds-ellipsis {
@@ -162,7 +186,11 @@
                 </div>
             </div>
             <div class="poster-div">
-                <div id="image-display">
+                <div id="image-display" style="display: none;">
+                    <img id="poster-display" src="" alt="Poster" />
+                    <button type="button" onclick="saveImage()">
+                        Save Image
+                    </button>
                 </div>
                 <div id="loader" style="display: none">
                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
@@ -197,7 +225,7 @@
                 document.getElementById("loader").style.display = "block";
 
                 // Clear image
-                document.getElementById("image-display").innerHTML = "";
+                document.getElementById("image-display").style.display = "none";
 
                 // Fetch image from api
                 fetch(`https://api.postergen.elliotjarnit.dev/generate`, {
@@ -219,7 +247,8 @@
                     // Convert to blob
                     .then(response => response.blob())
                     .then(data => {
-                        document.getElementById("image-display").innerHTML = `<img src="${URL.createObjectURL(data)}" alt="Poster" />`;
+                        document.getElementById("poster-display").src = URL.createObjectURL(data)
+                        document.getElementById("image-display").style.display = "flex";
 
                         // Hide loader
                         document.getElementById("loader").style.display = "none";
@@ -230,6 +259,14 @@
                         // Hide loader
                         document.getElementById("loader").style.display = "none";
                     });
+            }
+
+            function saveImage() {
+                let image = document.querySelector("#image-display img");
+                let link = document.createElement("a");
+                link.href = image.src;
+                link.download = "poster.png";
+                link.click();
             }
         </script>
     </body>
