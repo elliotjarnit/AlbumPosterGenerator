@@ -48,6 +48,12 @@
                 overflow-y: scroll;
             }
 
+            #image-res {
+                color: #ffffff;
+                font-size: 20px;
+                margin-top: 20px;
+            }
+
             #image-display {
                 display: flex;
                 flex-direction: column;
@@ -302,9 +308,12 @@
                     // Convert to blob
                     .then(response => response.blob())
                     .then(data => {
-                        document.getElementById("poster-display").src = URL.createObjectURL(data)
+                        poster = document.getElementById("poster-display")
+                        poster.src = URL.createObjectURL(data)
                         document.getElementById("image-display").style.display = "flex";
-                        document.getElementById("image-res").innerHTML = `Resolution: ${data.width}x${data.height}`;
+                        poster.onload = () => {
+                            document.getElementById("image-res").innerHTML = `Resolution: ${poster.width}x${poster.height}`;
+                        };
 
                         // Hide loader
                         document.getElementById("loader").style.display = "none";
