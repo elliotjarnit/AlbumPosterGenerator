@@ -312,7 +312,7 @@
                         poster.src = URL.createObjectURL(data)
                         document.getElementById("image-display").style.display = "flex";
                         poster.onload = () => {
-                            document.getElementById("image-res").innerHTML = `Resolution: ${poster.width}x${poster.height}`;
+                            document.getElementById("image-res").innerHTML = `Resolution: ${poster.naturalWidth}x${poster.naturalHeight}`;
                         };
 
                         // Hide loader
