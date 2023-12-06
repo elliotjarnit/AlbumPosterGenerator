@@ -198,6 +198,7 @@
             <div class="poster-div">
                 <div id="image-display" style="display: none;">
                     <img id="poster-display" src="" alt="Poster" />
+                    <span id="image-res">Resolution: </span>
                     <button type="button" onclick="saveImage()">
                         Save Image
                     </button>
@@ -303,6 +304,7 @@
                     .then(data => {
                         document.getElementById("poster-display").src = URL.createObjectURL(data)
                         document.getElementById("image-display").style.display = "flex";
+                        document.getElementById("image-res").innerHTML = `Resolution: ${data.width}x${data.height}`;
 
                         // Hide loader
                         document.getElementById("loader").style.display = "none";
