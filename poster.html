@@ -192,8 +192,8 @@
                     </label>
                     <div id="tracklist">
                         <div id="tracklist-item">
-                            <input id="tracklist-item-name" />
-                            <input id="tracklist-item-duration" />
+                            <input class="tracklist-item-name" />
+                            <input class="tracklist-item-duration" />
                         </div>
                     </div>
                 </form>
@@ -248,8 +248,8 @@
                         let tracklistItem = document.createElement("div");
                         tracklistItem.id = "tracklist-item";
                         tracklistItem.innerHTML = `
-                            <input id="tracklist-item-name" value="${track.trackName}" />
-                            <input id="tracklist-item-duration" value="${new Date(track.trackTimeMillis).toISOString().substr(14, 5)}" />
+                            <input class="tracklist-item-name" value="${track.trackName}" />
+                            <input class="tracklist-item-duration" value="${new Date(track.trackTimeMillis).toISOString().substr(14, 5)}" />
                         `;
                         tracklist.appendChild(tracklistItem);
                     }
