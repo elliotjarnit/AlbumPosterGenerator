@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
         <title>Poster</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="This generator allows you to instantly create posters for any music album for absolutely free!">
         <style>
             body {
                 margin: 0;
@@ -227,6 +228,12 @@
                 .then(response => response.json())
                 .then(res => {
                     data = res;
+
+                    // Change page title
+                    document.title = `${data.results[0].collectionName} Poster`;
+
+                    // Change meta description
+                    document.querySelector("meta[name='description']").content = `Generated poster for ${data.results[0].collectionName} by ${data.results[0].artistName}`;
 
                     // Populate form
                     document.getElementById("album-name").value = data.results[0].collectionName;
