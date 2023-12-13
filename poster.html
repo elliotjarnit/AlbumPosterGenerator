@@ -265,10 +265,10 @@
 
             function generatePoster() {
                 // Validate tracklist using regex
-                let tracklist = Array.from(document.querySelectorAll("#tracklist-item"));
+                let tracklist = Array.from(document.querySelectorAll(".tracklist-item"));
                 let tracklistValid = true;
                 tracklist.forEach(item => {
-                    let duration = item.querySelector("#tracklist-item-duration").value;
+                    let duration = item.querySelector(".tracklist-item-duration").value;
                     if (!/^\d{2}:\d{2}$/.test(duration)) {
                         tracklistValid = false;
                         Toastify({
@@ -303,10 +303,10 @@
                         artist: document.getElementById("album-artist").value,
                         year: document.getElementById("album-year").value,
                         artwork: data.results[0].artworkUrl100,
-                        tracklist: Array.from(document.querySelectorAll("#tracklist-item")).map(item => {
+                        tracklist: Array.from(document.querySelectorAll(".tracklist-item")).map(item => {
                             return {
-                                trackName: item.querySelector("#tracklist-item-name").value,
-                                trackTimeMillis: toMilliseconds(0, ...item.querySelector("#tracklist-item-duration").value.split(":").map(item => parseInt(item)))
+                                trackName: item.querySelector(".tracklist-item-name").value,
+                                trackTimeMillis: toMilliseconds(0, ...item.querySelector(".tracklist-item-duration").value.split(":").map(item => parseInt(item)))
                             }
                         }),
                         copyright: document.getElementById("copyright").checked ?
