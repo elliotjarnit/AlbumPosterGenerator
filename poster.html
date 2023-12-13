@@ -246,7 +246,7 @@
                     for (let i = 1; i < data.results.length; i++) {
                         let track = data.results[i];
                         let tracklistItem = document.createElement("div");
-                        tracklistItem.id = "tracklist-item";
+                        tracklistItem.classList.add("tracklist-item");
                         tracklistItem.innerHTML = `
                             <input class="tracklist-item-name" value="${track.trackName}" />
                             <input class="tracklist-item-duration" value="${new Date(track.trackTimeMillis).toISOString().substr(14, 5)}" />
